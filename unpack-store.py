@@ -5,6 +5,7 @@ import argparse
 import os
 import os.path
 import lz4.block
+from pathlib import Path
 
 ASSEMBLY_STORE_MAGIC = b"XABA"
 ASSEMBLY_STORE_FORMAT_VERSION = 1
@@ -220,7 +221,11 @@ class AssemblyStore(object):
                                          assembly.data_offset + assembly.data_size]
 
             print("Extracting %s..." % entry.name)
-            wfile = open("%s/%s.dll" % (outpath, entry.name), "wb")
+
+            outfile = "%s/%s.dll" % (outpath, entry.name)
+            Path(os.path.dirname(outfile)).mkdir(parents=True, exist_ok=True)
+
+            wfile = open(outfile, "wb")
 
             wfile.write(assembly_data)
             wfile.close()
